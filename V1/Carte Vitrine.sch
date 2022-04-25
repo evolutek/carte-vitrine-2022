@@ -5,7 +5,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Carte Vitrine"
-Date "2022-04-19"
+Date "2022-04-25"
 Rev "V1.0"
 Comp ""
 Comment1 ""
@@ -184,12 +184,12 @@ $EndComp
 $Comp
 L power:+12V #PWR05
 U 1 1 6259616B
-P 1450 3850
-F 0 "#PWR05" H 1450 3700 50  0001 C CNN
-F 1 "+12V" H 1350 4000 50  0000 L CNN
-F 2 "" H 1450 3850 50  0001 C CNN
-F 3 "" H 1450 3850 50  0001 C CNN
-	1    1450 3850
+P 1300 3700
+F 0 "#PWR05" H 1300 3550 50  0001 C CNN
+F 1 "+12V" H 1200 3850 50  0000 L CNN
+F 2 "" H 1300 3700 50  0001 C CNN
+F 3 "" H 1300 3700 50  0001 C CNN
+	1    1300 3700
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -433,16 +433,16 @@ $EndComp
 $Comp
 L Connector:Conn_01x05_Male Motor1
 U 1 1 6261FC6B
-P 4000 4450
-F 0 "Motor1" H 3972 4474 50  0000 R CNN
-F 1 "Conn_01x05_Male" H 3972 4383 50  0000 R CNN
-F 2 "Connector_JST:JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical" H 4000 4450 50  0001 C CNN
-F 3 "~" H 4000 4450 50  0001 C CNN
-	1    4000 4450
-	-1   0    0    -1  
+P 4000 4350
+F 0 "Motor1" H 3972 4374 50  0000 R CNN
+F 1 "Conn_01x05_Male" H 3972 4283 50  0000 R CNN
+F 2 "Connector_JST:JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical" H 4000 4350 50  0001 C CNN
+F 3 "~" H 4000 4350 50  0001 C CNN
+	1    4000 4350
+	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	3200 4450 3200 4550
+	3200 4450 3200 4500
 $Comp
 L ComponentsEvo:TB6612FNG U2
 U 1 1 625943A2
@@ -802,8 +802,6 @@ F 3 "" H 2300 1600 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3250 1000 3350 1000
-Wire Wire Line
-	1450 3850 1550 3850
 Wire Wire Line
 	1450 4350 1550 4350
 Connection ~ 1550 4350
@@ -1174,4 +1172,51 @@ Wire Notes Line
 	2700 7350 2700 5350
 Text Notes 3700 5500 0    50   ~ 0
 Mouting Holes
+$Comp
+L Jumper:Jumper_3_Open JP1
+U 1 1 6261B076
+P 1550 3700
+F 0 "JP1" H 950 3700 50  0000 C CNN
+F 1 "Jumper_3_Open" H 900 3650 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 1550 3700 50  0001 C CNN
+F 3 "~" H 1550 3700 50  0001 C CNN
+	1    1550 3700
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR031
+U 1 1 6261D775
+P 1800 3700
+F 0 "#PWR031" H 1800 3550 50  0001 C CNN
+F 1 "+5V" H 1700 3850 50  0000 L CNN
+F 2 "" H 1800 3700 50  0001 C CNN
+F 3 "" H 1800 3700 50  0001 C CNN
+	1    1800 3700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3800 4250 3200 4250
+Wire Wire Line
+	3200 4350 3800 4350
+Wire Wire Line
+	3400 4450 3400 4650
+Wire Wire Line
+	3400 4650 3200 4650
+Wire Wire Line
+	3400 4450 3800 4450
+Wire Wire Line
+	3200 4750 3500 4750
+Wire Wire Line
+	3500 4750 3500 4550
+Wire Wire Line
+	3500 4550 3800 4550
+Wire Wire Line
+	3800 4150 3300 4150
+Wire Wire Line
+	3300 4150 3300 4500
+Wire Wire Line
+	3300 4500 3200 4500
+Connection ~ 3200 4500
+Wire Wire Line
+	3200 4500 3200 4550
 $EndSCHEMATC
