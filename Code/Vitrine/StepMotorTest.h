@@ -1,26 +1,27 @@
 #pragma once
 
-#include <Stepper.h>
+#include "StepMotorDriver.h"
 
 
 class StepMotorTest : public Test {
     private:
 
-    Stepper motor;
+    StepMotorDriver motor;
+    EventsDriver events;
 
 
     public:
 
-    StepMotorTest(int a, int b, int c, int d) : motor(64 * 8, a, b, c, d) {
-        ;
+    StepMotorTest(EventsDriver events, int a, int b, int c, int d) : motor(2 * 8 * 64, a, b, c, d) {
+        this->events = events;
     }
 
     void setup() {
-        motor.setSpeed(30);
+        motor.init();
+        motor.free();
     }
 
     void loop() {
-        motor.step(64 * 4);
-        Serial.println("blablabla");
+        //motor.steps(4);
     }
 };

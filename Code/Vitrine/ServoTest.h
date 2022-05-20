@@ -20,10 +20,33 @@ class ServoTest : public Test {
     int current_speed;
     int current_angle;
 
+    EventsDriver events;
+
+    static void tick(void* data) {
+        ServoTest* self = (ServoTest*) data;
+
+        self->writeAngle();
+        
+        self->current_angle += self->current_speed;
+
+        if (self->current_angle < self->min_angle) {
+            self->current_angle = self->min_angle;
+            self->current_speed = -self->current_speed;
+        } else if (self->current_angle > self->max_angle) {
+            self->current_angle = self->max_angle;
+            self->current_speed = -self->current_speed;
+        }
+    }
+
+    void writeAngle() {
+        this->left_servo.write(this->current_angle);
+        this->right_servo.write(180 - this->current_angle);
+    }
+
 
     public:
 
-    ServoTest(int left_servo_pin, int right_servo_pin, int min_angle, int max_angle) {
+    ServoTest(EventsDriver events, int left_servo_pin, int right_servo_pin, int min_angle, int max_angle) {
         this->left_servo_pin = left_servo_pin;
         this->right_servo_pin = right_servo_pin;
         
@@ -32,11 +55,8 @@ class ServoTest : public Test {
 
         this->current_speed = 1;
         this->current_angle = 90;
-    }
 
-    void writeAngle() {
-        this->left_servo.write(this->current_angle);
-        this->right_servo.write(180 - this->current_angle);
+        this->events = events;
     }
 
     void setup() {
@@ -45,21 +65,10 @@ class ServoTest : public Test {
         this->writeAngle();
         delay(1500);
         Serial.setTimeout(10);
+        events.addEvent(tick, this, 15, false);
     }
 
     void loop() {
-        writeAngle();
-        
-        current_angle += current_speed;
-
-        if (current_angle < min_angle) {
-            current_angle = min_angle;
-            current_speed = -current_speed;
-        } else if (current_angle > max_angle) {
-            current_angle = max_angle;
-            current_speed = -current_speed;
-        }
-
-        delay(20);
+        ;
     }
 };

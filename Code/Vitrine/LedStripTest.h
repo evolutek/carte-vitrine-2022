@@ -24,11 +24,29 @@ class LedStripTest : public Test {
     int32_t tint_step_base;
     int32_t tint_step_multiplier; // Incress the step with the brithness
 
+    EventsDriver events;
+
+    static void tick(void* data) {
+      LedStripTest* self = (LedStripTest*) data;
+
+      self->setOverallColor(self->colors[0], self->colors[1], self->colors[2]);
+      
+      //Serial.print("R: ");
+      //Serial.print(colors[0]);
+      //Serial.print("G: ");
+      //Serial.print(colors[1]);
+      //Serial.print("B: ");
+      //Serial.println(colors[2]);
+      
+      self->nextColor();
+    }
+
 
     public:
 
-    LedStripTest(int inner_ring_pin, int inner_ring_len) {
+    LedStripTest(EventsDriver events, int inner_ring_pin, int inner_ring_len) {
       inner_ring = Adafruit_NeoPixel(inner_ring_len, inner_ring_pin, NEO_RGB + NEO_KHZ800);
+      this->events = events;
 
       colors[0] = 0;
       colors[1] = 0;
@@ -54,6 +72,7 @@ class LedStripTest : public Test {
     void setup() {
       inner_ring.begin();
       inner_ring.setBrightness(255);
+      events.addEvent(tick, this, 50, false);
     }
 
     void setOverallColor(byte r, byte g, byte b) {
@@ -119,17 +138,7 @@ class LedStripTest : public Test {
       colors[2] = clamp(colors[2], 0, 255);
     }
 
-    void loop() {
-      setOverallColor(colors[0], colors[1], colors[2]);
-      
-      Serial.print("R: ");
-      Serial.print(colors[0]);
-      Serial.print("G: ");
-      Serial.print(colors[1]);
-      Serial.print("B: ");
-      Serial.println(colors[2]);
-      
-      nextColor();
-      delay(50);
-    }
+  void loop() {
+    ;
+  }
 };

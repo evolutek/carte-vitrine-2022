@@ -5,31 +5,42 @@
 class LedTest : public Test {
     private:
 
-    int* pins;
+    const int* pins;
     int nb_pins;
     int current_led_id;
+    EventsDriver events;
+
+    static void tick(void* data) {
+        LedTest* self = (LedTest*) data;
+
+        Serial.print("Current led id: ");
+        Serial.println(self->current_led_id);
+
+        digitalWrite(self->pins[self->current_led_id], LOW);
+        self->current_led_id++;
+        if (self->current_led_id >= self->nb_pins)
+            self->current_led_id = 0;
+        digitalWrite(self->pins[self->current_led_id], HIGH);
+    }
 
 
     public:
 
-    LedTest(int nb_pins, int* pins) {
+    LedTest(EventsDriver events, int nb_pins, const int* pins) {
         this->pins = pins;
         this->nb_pins = nb_pins;
         this->current_led_id = 0;
+        this->events = events;
     }
 
     void setup() {
         for (int i = 0; i < this->nb_pins; i++)
             pinMode(this->pins[i], OUTPUT);
         digitalWrite(this->pins[0], HIGH);
+        events.addEvent(tick, this, 600, false);
     }
 
     void loop() {
-        delay(1000);
-        digitalWrite(this->pins[this->current_led_id], LOW);
-        this->current_led_id++;
-        if (this->current_led_id >= this->nb_pins)
-            this->current_led_id = 0;
-        digitalWrite(this->pins[this->current_led_id], HIGH);
+        ;
     }
 };
