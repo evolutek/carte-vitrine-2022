@@ -61,8 +61,8 @@ class EventsDriver {
                             previous->next = ev->next;
                         free(ev);
                     } else {
-                        // Reset the timestamp
-                        ev->timestamp = millis() + ev->interval;
+                        // Incress the timestamp
+                        ev->timestamp += ev->interval;
                         if (ev->timestamp < minNextTimestamp)
                             minNextTimestamp = ev->timestamp;
                     }

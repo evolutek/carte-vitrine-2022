@@ -9,12 +9,14 @@ class LedStripDriver : public Driver {
     private:
 
     Adafruit_NeoPixel ledStrip;
+    EventsDriver *events;
 
 
     public:
 
-    LedStripDriver(int pin, int len) {
-        ledStrip = Adafruit_NeoPixel(len, pin, NEO_RGB + NEO_KHZ800);
+    LedStripDriver(EventsDriver &events, int pin, int len) {
+        this->ledStrip = Adafruit_NeoPixel(len, pin, NEO_RGB + NEO_KHZ800);
+        this->events = &events;
     }
 
     void init() {
@@ -22,11 +24,11 @@ class LedStripDriver : public Driver {
       ledStrip.setBrightness(255);
     }
 
-    void setLedColor(int pos, int color) {
+    void setLedColor(int pos, uint32_t color) {
         ledStrip.setPixelColor(pos, color);
     }
 
-    void setAllColor(int color) {
+    void setAllColor(uint32_t color) {
         ledStrip.fill(color, 0, ledStrip.numPixels());
     }
 

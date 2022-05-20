@@ -20,7 +20,7 @@ class StepMotorTest : public Test {
         motor.init();
         motor.free();
         motor.setSpeed(8);
-        motor.enable();
+        motor.start();
     }
 
     void loop() {

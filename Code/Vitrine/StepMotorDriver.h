@@ -126,16 +126,17 @@ class StepMotorDriver : public Driver {
         }
     }
 
-    void enable() {
+    void start() {
         _motorEnabled = true;
         _event->interval = _stepInterval;
         _event->timestamp = 0;
     }
 
-    void disable() {
+    void stop() {
         _motorEnabled = false;
         _remainingSteps = 0;
         _event->timestamp = 0xFFFFFFFF;
+        free();
     }
 
     void free() {

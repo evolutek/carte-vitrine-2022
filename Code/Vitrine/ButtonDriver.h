@@ -14,8 +14,8 @@ class ButtonDriver : public Driver {
 
     static void tick(void* data) {
         ButtonDriver* self = (ButtonDriver*) data;
-        Serial.print("Button state: ");
-        Serial.println(digitalRead(self->pin));
+        //Serial.print("Button state: ");
+        //Serial.println(digitalRead(self->pin));
         if (digitalRead(self->pin))
             self->stateAvg = (self->stateAvg + 1) / 2;
         else
