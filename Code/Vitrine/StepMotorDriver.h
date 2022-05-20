@@ -69,6 +69,8 @@ class StepMotorDriver : public Driver {
     int _timeout; // The maximum power on time for a pin (to avoid burning the motor)
     int _stepInterval; // Delay between each step
     int _freeDelay; // Delay before calling free (0 disable the call to free)
+    EventsDriver *_events;
+    event_t _event;
 
     void _writeStep(const bool* stats) {
         for (int i = _pinsLen; i--;)
@@ -80,10 +82,21 @@ class StepMotorDriver : public Driver {
             digitalWrite(_pins[i], stat);
     }
 
+    static void staticFree(void* data) {
+      ((StepMotorDriver*)data)->free();
+    }
+
+    static void staticStep(void* data) {
+      StepMotorDriver* self = (StepMotorDriver*) data;
+      if (self->_motorEnabled || self->_remainingSteps--) {
+          self->step();
+      }
+    }
+
 
     public:
 
-    StepMotorDriver(int stepsPerRotation, int pinA, int pinB, int pinC, int pinD) {
+    StepMotorDriver(EventsDriver &events, int stepsPerRotation, int pinA, int pinB, int pinC, int pinD) {
         this->_stepsPerRotation = stepsPerRotation;
         this->_pins[0] = pinA;
         this->_pins[1] = pinB;
@@ -91,9 +104,13 @@ class StepMotorDriver : public Driver {
         this->_pins[3] = pinD;
         this->_currentStep = 0;
         this->_remainingSteps = 0;
+        this->_stepInterval = 0;
+        this->_freeDelay = 1;
         this->_motorEnabled = false;
         this->_pinsLen = 4;
         this->_timeout = 10;
+        this->_events = &events;
+        this->_event = nullptr;
         this->setSpeed(5);
     }
 
@@ -111,11 +128,14 @@ class StepMotorDriver : public Driver {
 
     void enable() {
         _motorEnabled = true;
+        _event->interval = _stepInterval;
+        _event->timestamp = 0;
     }
 
     void disable() {
         _motorEnabled = false;
         _remainingSteps = 0;
+        _event->timestamp = 0xFFFFFFFF;
     }
 
     void free() {
@@ -131,20 +151,15 @@ class StepMotorDriver : public Driver {
             pinMode(_pins[i], OUTPUT);
             digitalWrite(_pins[i], LOW);
         }
+        _event = _events->addEvent(StepMotorDriver::staticStep, this, 0xFFFFF, false);
+        _event->timestamp = 0xFFFFFFFF;
     }
 
     void steps(int nbSteps) {
         _motorEnabled = false;
         _remainingSteps = nbSteps;
-        while(_remainingSteps--) {
-            step();
-            if (_freeDelay > 0) {
-                delay(_freeDelay);
-                free();
-            }
-            delay(_stepInterval);
-        }
-        free();
+        _event->interval = _stepInterval;
+        _event->timestamp = 0;
     }
 
     void step() {
@@ -152,5 +167,7 @@ class StepMotorDriver : public Driver {
         _currentStep++;
         if (_currentStep >= _stepsLen)
             _currentStep = 0;
+        if (_freeDelay > 0)
+            _events->addEvent(StepMotorDriver::staticFree, this, _freeDelay, true);
     }
 };

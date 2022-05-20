@@ -29,16 +29,17 @@ class EventsDriver {
         this->minNextTimestamp = 0;
     }
 
-    void addEvent(event_callback_t callback, void* data, uint32_t delay, bool ontime) {
+    event_t addEvent(event_callback_t callback, void* data, uint32_t interval, bool ontime) {
         event_t ev = (event_t) malloc(sizeof(struct event_s));
         ev->callback = callback;
         ev->data = data;
-        ev->interval = delay;
-        ev->timestamp = millis() + delay;
+        ev->interval = interval;
+        ev->timestamp = millis() + interval;
         ev->ontime = ontime;
         ev->next = events;
         // Insert an event in the linked list and don't care of the order
         events = ev;
+        return ev;
     }
 
     uint32_t processEvents() {

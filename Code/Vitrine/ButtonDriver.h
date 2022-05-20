@@ -9,22 +9,25 @@ class ButtonDriver : public Driver {
     bool lastState;
     float stateAvg;
     int pin;
-    EventsDriver events;
+    EventsDriver *events;
     bool pullup;
 
-    void tick() {
-        if (digitalRead(pin))
-            stateAvg = (stateAvg + 1) / 2;
+    static void tick(void* data) {
+        ButtonDriver* self = (ButtonDriver*) data;
+        Serial.print("Button state: ");
+        Serial.println(digitalRead(self->pin));
+        if (digitalRead(self->pin))
+            self->stateAvg = (self->stateAvg + 1) / 2;
         else
-            stateAvg /= 2;
+            self->stateAvg /= 2;
     }
 
 
     public:
     
-    ButtonDriver(EventsDriver events, int pin, bool pullup = false) {
+    ButtonDriver(EventsDriver &events, int pin, bool pullup = false) {
         this->pin = pin;
-        this->events = events;
+        this->events = &events;
         this->pullup = pullup;
         this->stateAvg = 0.5;
         this->lastState = LOW;
@@ -33,6 +36,7 @@ class ButtonDriver : public Driver {
     void init() {
         pinMode(pin, pullup ? INPUT_PULLUP : INPUT);
         lastState = digitalRead(pin);
+        events->addEvent(ButtonDriver::tick, this, 50, false);
     }
 
     bool getState() {

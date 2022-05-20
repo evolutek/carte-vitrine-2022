@@ -24,7 +24,7 @@ class LedStripTest : public Test {
     int32_t tint_step_base;
     int32_t tint_step_multiplier; // Incress the step with the brithness
 
-    EventsDriver events;
+    EventsDriver *events;
 
     static void tick(void* data) {
       LedStripTest* self = (LedStripTest*) data;
@@ -44,9 +44,9 @@ class LedStripTest : public Test {
 
     public:
 
-    LedStripTest(EventsDriver events, int inner_ring_pin, int inner_ring_len) {
-      inner_ring = Adafruit_NeoPixel(inner_ring_len, inner_ring_pin, NEO_RGB + NEO_KHZ800);
-      this->events = events;
+    LedStripTest(EventsDriver &events, int inner_ring_pin, int inner_ring_len) 
+        : inner_ring(inner_ring_len, inner_ring_pin, NEO_RGB + NEO_KHZ800) {
+      this->events = &events;
 
       colors[0] = 0;
       colors[1] = 0;
@@ -72,7 +72,7 @@ class LedStripTest : public Test {
     void setup() {
       inner_ring.begin();
       inner_ring.setBrightness(255);
-      events.addEvent(tick, this, 50, false);
+      events->addEvent(LedStripTest::tick, this, 50, false);
     }
 
     void setOverallColor(byte r, byte g, byte b) {

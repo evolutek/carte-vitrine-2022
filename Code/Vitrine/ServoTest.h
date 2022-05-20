@@ -20,7 +20,7 @@ class ServoTest : public Test {
     int current_speed;
     int current_angle;
 
-    EventsDriver events;
+    EventsDriver *events;
 
     static void tick(void* data) {
         ServoTest* self = (ServoTest*) data;
@@ -46,7 +46,7 @@ class ServoTest : public Test {
 
     public:
 
-    ServoTest(EventsDriver events, int left_servo_pin, int right_servo_pin, int min_angle, int max_angle) {
+    ServoTest(EventsDriver &events, int left_servo_pin, int right_servo_pin, int min_angle, int max_angle) {
         this->left_servo_pin = left_servo_pin;
         this->right_servo_pin = right_servo_pin;
         
@@ -56,16 +56,15 @@ class ServoTest : public Test {
         this->current_speed = 1;
         this->current_angle = 90;
 
-        this->events = events;
+        this->events = &events;
     }
 
     void setup() {
         this->left_servo.attach(this->left_servo_pin);
         this->right_servo.attach(this->right_servo_pin);
         this->writeAngle();
-        delay(1500);
         Serial.setTimeout(10);
-        events.addEvent(tick, this, 15, false);
+        events->addEvent(ServoTest::tick, this, 15, false);
     }
 
     void loop() {

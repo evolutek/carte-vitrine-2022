@@ -9,13 +9,14 @@ const int LEDS_PINS[] = {PIN_LED_ONBOARD, PIN_LED_DETECT, PIN_LED_UP, PIN_LED_DO
 
 EventsDriver events;
 
-//StepMotorTest boardTest(events, PIN_STEP_MOTOR_A, PIN_STEP_MOTOR_B, PIN_STEP_MOTOR_C, PIN_STEP_MOTOR_D);
-//ServoTest doorTest(events, PIN_SERVO_LEFT, PIN_SERVO_RIGHT, 58, 155);
-//LedStripTest ledStripTest(events, PIN_LEDSTRIP_INNER, 16);
+ServoTest doorTest(events, PIN_SERVO_LEFT, PIN_SERVO_RIGHT, 58, 155);
+StepMotorTest boardTest(events, PIN_STEP_MOTOR_A, PIN_STEP_MOTOR_B, PIN_STEP_MOTOR_C, PIN_STEP_MOTOR_D);
+LedStripTest ledStripTest(events, PIN_LEDSTRIP_INNER, 16);
 LedTest ledTest(events, 4, LEDS_PINS);
+ButtonTest btnTest(events, PIN_BTN_MOVE);
 
 
-Test *tests[] = {/*&boardTest, &ledStripTest, &doorTest, */&ledTest};
+Test *tests[] = {&ledStripTest, &ledTest, &doorTest, &boardTest, &btnTest};
 const int testsLen = sizeof(tests) / sizeof(Test*);
 
 
@@ -28,10 +29,10 @@ void setup()
 }
 
 
-void loop() 
+void loop()
 {
     events.processEvents();
-    /*for (int i = 0; i < testsLen; i++) {
+    for (int i = 0; i < testsLen; i++) {
         tests[i]->loop();
-    }*/
+    }
 }
