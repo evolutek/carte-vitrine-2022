@@ -15,11 +15,11 @@ Motor connections names in order:
 M1, M2, M3, M4
 
 Connections:
-AOUT1 -> M1 (+)
-AOUT2 -> M3 (+)
-BOUT2 -> M2 (+)
-BOUT1 -> M4 (+)
-Motor common wire -> (-)
+AOUT1 -> Motor pin 1
+AOUT2 -> Motor pin 3
+BOUT2 -> Motor pin 2
+BOUT1 -> Motor pin 4
+(-) -> Motor common wire
 
 Step table:
 AIN1 AIN2 BIN1 BIN2
@@ -32,7 +32,7 @@ AIN1 AIN2 BIN1 BIN2
 0    0    1    0
 1    0    1    0
 
-Free:
+Free wheel (high impedance mode):
 AIN1 AIN2 BIN1 BIN2
 0    0    0    0
 
@@ -67,19 +67,19 @@ class StepMotorDriver : public Driver {
     int _remainingSteps;
     int _speed;
     int _timeout; // The maximum power on time for a pin (to avoid burning the motor)
-    int _stepInterval; // Delay between each step
-    int _freeDelay; // Delay before calling free (0 disable the call to free)
+    int _stepInterval; // Delay between each step (changed by "setSpeed")
+    int _freeDelay; // Delay before calling free after the function "step" was run (0 disable the call to free)
     EventsDriver *_events;
     event_t _event;
 
-    void _writeStep(const bool* stats) {
+    void _writeStep(const bool* states) {
         for (int i = _pinsLen; i--;)
-            digitalWrite(_pins[i], stats[i]);
+            digitalWrite(_pins[i], states[i]);
     }
 
-    void _writeAll(bool stat) {
+    void _writeAll(bool state) {
         for (int i = _pinsLen; i--;)
-            digitalWrite(_pins[i], stat);
+            digitalWrite(_pins[i], state);
     }
 
     static void staticFree(void* data) {
@@ -108,10 +108,10 @@ class StepMotorDriver : public Driver {
         this->_freeDelay = 1;
         this->_motorEnabled = false;
         this->_pinsLen = 4;
-        this->_timeout = 10;
+        this->_timeout = 8;
         this->_events = &events;
         this->_event = nullptr;
-        this->setSpeed(5);
+        this->setSpeed(5); // Set a default speed
     }
 
     // Set the speed in RPM

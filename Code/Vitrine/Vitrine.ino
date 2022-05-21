@@ -1,12 +1,28 @@
-//#include "Main.h"
+// Comment the line below to disable test mode
+#define TEST_MODE
+
+#ifdef TEST_MODE
+
 #include "MainTest.h"
 
 void setup() {
-    //mainSetup();
     testSetup();
 }
 
 void loop() {
-    //mainLoop();
     testLoop();
 }
+
+#else
+
+#include "Main.h"
+
+void setup() {
+    mainSetup();
+}
+
+void loop() {
+    mainLoop();
+}
+
+#endif

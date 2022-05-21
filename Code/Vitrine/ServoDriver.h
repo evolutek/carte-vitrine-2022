@@ -44,9 +44,10 @@ class ServoDriver : public Driver {
         this->minPulseWidth = minPulseWidth;
         this->maxPulseWidth = maxPulseWidth;
         this->maxAngle = maxAngle;
-        this->updateInterval = 15;
+        this->updateInterval = 8;
         this->currentPulseWidth = (minPulseWidth + maxPulseWidth) / 2;
         this->targetPulseWidth = this->currentPulseWidth;
+        this->setSpeed(30); // Set a default speed
     }
 
     // The unit is RPM

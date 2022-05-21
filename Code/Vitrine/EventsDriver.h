@@ -77,10 +77,4 @@ class EventsDriver {
         
         return minNextTimestamp;
     }
-
-    void startLoop() {
-        while (true) {
-            delay(processEvents() - millis());
-        }
-    }
 };
