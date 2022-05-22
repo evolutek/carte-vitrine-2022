@@ -67,7 +67,7 @@ Ce sont tous les fichiers (et classes) terminant par "Test.h". Le bute de ces cl
 ```cpp
 	// L'avantage de ce driver est qu'il permet agit comme un condensateur en dérivation avec  le button.
 	// Donc les micro impulsions ne mette pas l'état du bouton a haut.
-	StepMotorDriver(ventsDriver eventsDriver, int pin);
+	StepMotorDriver(EventsDriver eventsDriver, int pin);
 	bool getState(); // Get the button state ('HIGH'/'true' if pressed or 'LOW'/'false' otherwise)
 ```
 
