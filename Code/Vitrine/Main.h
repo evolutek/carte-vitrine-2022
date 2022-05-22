@@ -3,6 +3,7 @@
 #include "Defines.h"
 #include "Utils.h"
 
+
 EventsDriver events;
 
 LedStripDriver LedRing_l(events, PIN_LEDSTRIP_INNER, NUMBER_LEDRINGL);
@@ -27,6 +28,13 @@ void mainSetup()
   
   LedRing_l.init();
   LedRing_b.init();
+  
+  btn.init();
+  
+  Sensor1.init();
+  Sensor2.init();
+  
+  motor.init();
 }
 
 
